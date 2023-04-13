@@ -1,0 +1,74 @@
+node{
+
+def mavenHome=tool name: "maven3.9.0"
+
+try{
+
+notifyBuild('STARTED')
+stage('checkout code'){
+git branch: 'development', credentialsId: '40de6d70-6950-4e26-a985-2a8e13c20a40', url: 'https://github.com/mssbankfeb/maven-web-application.git'
+}
+
+
+stage('build the project'){
+
+sh "${mavenHome}/bin/mvn clean package"
+}
+/*
+stage('sonar report'){
+
+sh "${mavenHome}/bin/mvn clean sonar:sonar"
+}
+
+
+stage('deploying app to tomcat server'){
+sshagent(['1f3eb7fc-a430-4466-b3b6-89268fe17c19']) {
+    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@43.205.255.119:/opt/apache-tomcat-9.0.73/webapps/"
+}
+}
+*/
+}//try closing
+
+catch(e){
+currentBuild.result = "FAILED"
+throw e
+}//catch closing
+
+finally{
+//success or failure send slack notification
+notifyBuild(currentBuild.result)
+}
+
+
+}//node closing
+
+
+
+def notifyBuild(String buildStatus = 'STARTED') {
+  // build status of null means successful
+  buildStatus =  buildStatus ?: 'SUCCESS'
+
+  // Default values
+  def colorName = 'RED'
+  def colorCode = '#FF0000'
+  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+  def summary = "${subject} (${env.BUILD_URL})"
+
+  // Override default values based on build status
+  if (buildStatus == 'STARTED') {
+    colorName = 'YELLOW'
+    colorCode = '#FFFF00'
+  } else if (buildStatus == 'SUCCESS') {
+    colorName = 'GREEN'
+    colorCode = '#00FF00'
+  } else {
+    colorName = 'RED'
+    colorCode = '#FF0000'
+  }
+
+  // Send notifications
+  slackSend (color: colorCode, message: summary, channel: '#citibank')
+}
+
+
+
