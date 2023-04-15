@@ -3,7 +3,8 @@ node{
 def mavenHome=tool name: "maven3.9.0"
 stage('checkout code'){
 git branch: 'development', credentialsId: '40de6d70-6950-4e26-a985-2a8e13c20a40', url: 'https://github.com/mssbankfeb/maven-web-application.git'
-
+//if you build with parameters
+//git branch: "${params.BranchName}", credentialsId: '40de6d70-6950-4e26-a985-2a8e13c20a40', url: 'https://github.com/mssbankfeb/maven-web-application.git'
 }
 
 stage('build the project'){
