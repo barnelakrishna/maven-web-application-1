@@ -15,14 +15,12 @@ stage('sonar report'){
 
 sh "${mavenHome}/bin/mvn clean sonar:sonar"
 }
-*/
+
 
 stage('deploying app to tomcat server'){
 sshagent(['1f3eb7fc-a430-4466-b3b6-89268fe17c19']) {
     sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@43.205.255.119:/opt/apache-tomcat-9.0.73/webapps/"
 }
-
-
 }
-
+*/
 }
