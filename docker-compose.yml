@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   springboot:
-    image: 7618/maven-web-application:27
+    image: 7618/maven-web-application:VERSION
     restart: always
     ports:
     - 9090:8080
