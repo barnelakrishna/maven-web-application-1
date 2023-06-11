@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: mavenwebapp
-        image: 7618/maven-web-application
+        image: 7618/maven-web-application:VERSION
         ports:
         - containerPort: 8080
 
