@@ -1,0 +1,30 @@
+node{
+    
+    def mavenHome= tool name: "maven3.9.0"
+    def buildNumber=BUILD_NUMBER
+    stage('git clone'){
+        git branch: 'stage', credentialsId: 'GitHubCredentials', url: 'https://github.com/mssbankfeb/maven-web-application.git'
+    }
+    
+    stage('build'){
+        sh "${mavenHome}/bin/mvn clean package"
+    }
+    
+    stage('build the image with docker file'){
+     sh "docker build -t 7618/maven-web-application:$buildNumber ."
+    }
+    
+    stage('push the docker image to docker hub'){
+        withCredentials([string(credentialsId: 'dockerhubid', variable: 'dockerhubid')]) {
+     sh " docker login -u 7618 -p ${dockerhubid} "
+     sh" docker push 7618/maven-web-application:$buildNumber "
+    }
+    }
+    stage('replacing tag in manifest file'){
+	  sh "sed -i 's/VERSION/$buildNumber/g' deployment.yml"
+	}
+    
+    stage('deploy to kubernetes cluster'){
+      sh "kubectl apply -f deployment.yml"
+    }  
+}
