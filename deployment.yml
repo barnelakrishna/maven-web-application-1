@@ -19,7 +19,8 @@ spec:
       - name: mavenwebapp
         image: 7618/maven-web-application:VERSION
         ports:
-        - containerPort: 8080  
+        - containerPort: 8080
+        
 ---
 apiVersion: v1
 kind: Service
@@ -33,3 +34,4 @@ spec:
   ports:
   - port: 80
     targetPort: 8080
+    nodePort: 30008
