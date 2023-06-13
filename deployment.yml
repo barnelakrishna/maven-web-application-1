@@ -1,0 +1,22 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata: 
+  name: mavenwebapp 
+  namespace: test-ns 
+spec: 
+  replicas: 2 
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+       app: mavenwebapp 
+  template:
+    metadata:
+       labels:
+         app: mavenwebapp 
+    spec: 
+      containers:
+      - name: mavenwebapp
+        image: 7618/maven-web-application: VERSION
+        ports:
+        - containerPort: 8080  
