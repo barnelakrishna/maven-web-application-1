@@ -1,0 +1,24 @@
+Create one new ec2 instance(ubuntu)
+sudo apt update -y
+sudo apt install nfs-kernel-server -y
+
+sudo mkdir -p /mnt/nfs_share
+
+sudo chown nobody:nogroup /mnt/nfs_share
+sudo chmod 777 -R /mnt/nfs_share/
+
+sudo vi /etc/exports
+/mnt/nfs_share *(rw,sync,no_root_squash,no_subtree_check)
+
+sudo exportfs -a
+enable the port at SG - 2049
+
+sudo systemctl restart nfs-kernel-server
+
+
+on the nodes where you want to use this nfs share, you need to install some client 
+softwares
+
+sudo apt update -y
+sudo apt install nfs-common -y
+
