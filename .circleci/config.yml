@@ -1,6 +1,11 @@
 version: 2.1
-jobs:
-  build:
+orbs:
+  aws-ecr: circleci/aws-ecr@8.1.3
+
+workflows:
+  build_and_push_image:
+
+    build:
     working_directory: ~/project
     docker:
       - image: circleci/openjdk:11-jdk-buster
@@ -8,3 +13,12 @@ jobs:
       - checkout
       - run: mvn clean install
       - run: mvn test
+    jobs:
+      - aws-ecr/build-and-push-image:
+          context: aws-dev
+          create-repo: true
+          dockerfile: Dockerfile
+          path: .
+          repo: circleci-ecr-demo
+          tag: "$CIRCLE_SHA1"
+
