@@ -2,8 +2,8 @@ version: 2.1
 orbs:
   aws-ecr: circleci/aws-ecr@8.1.3
 jobs: 
-  aws-cli-cred-setup: aws-cli/default
-    executor: 
+  aws-cli-cred-setup: 
+    executor: aws-cli
           steps:
             - aws-cli/setup:
               aws-access-key-id: AKIARWGRW3GYXPUTJJMG
