@@ -11,6 +11,8 @@ workflows:
           create-repo: true
           dockerfile: Dockerfile
           path: .
+          aws_access_key_id: AKIARWGRW3GYXPUTJJMG
+          aws_secret_access_key: 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
           repo: circleci-ecr-demo
           tag: latest
   
