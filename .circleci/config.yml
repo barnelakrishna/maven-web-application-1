@@ -1,22 +1,17 @@
-version: 2.1
-
+version: '2.1'
 orbs:
-  aws-ecr: circleci/aws-ecr@8.1.3
+  aws-cli: circleci/aws-cli@4.0
+  aws-ecr: circleci/aws-ecr@9.0
+jobs:
+  build-test-then-push-with-buildx:
+    machine:
+      image: ubuntu-2204:2022.07.1
+    steps:
+      - run:
+          command:
+            docker build -t public.ecr.aws/g5u9i3i2/circleci:latest .
+      - run:
+          command:
+            aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/g5u9i3i2
+            docker push public.ecr.aws/g5u9i3i2/circleci:latest
 
-workflows:
-  build_and_push_image:
-    jobs:
-      - aws-ecr/build-and-push-image:          
-          context: aws-dev
-          create-repo: true
-          dockerfile: Dockerfile
-          path: .
-          aws_access_key_id: AKIARWGRW3GYXPUTJJMG
-          aws_secret_access_key: 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
-        steps:
-          - run:
-              command:
-                aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/g5u9i3i2
-                docker tag circleci:latest public.ecr.aws/g5u9i3i2/circleci:latest 
-                docker push public.ecr.aws/g5u9i3i2/circleci:latest
-         
