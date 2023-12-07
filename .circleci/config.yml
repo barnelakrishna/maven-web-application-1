@@ -11,8 +11,6 @@ workflows:
         - run:
             command:
               docker build -t public.ecr.aws/g5u9i3i2/circleci:latest .
-        - run:
-            command:
               aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/g5u9i3i2
               docker push public.ecr.aws/g5u9i3i2/circleci:latest
 
