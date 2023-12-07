@@ -1,24 +1,16 @@
-version: 2.1
+version: '2.1'
 orbs:
-  aws-ecr: circleci/aws-ecr@8.1.3
-
-workflows:
-  build_and_push_image:
-
-    build:
-    working_directory: ~/project
-    docker:
-      - image: circleci/openjdk:11-jdk-buster
+  aws-cli: circleci/aws-cli@4.0
+  aws-ecr: circleci/aws-ecr@9.0
+jobs:
+  build-test-then-push-with-buildx:
+    machine:
+      image: ubuntu-2204:2022.07.1
     steps:
-      - checkout
-      - run: mvn clean install
-      - run: mvn test
-    jobs:
-      - aws-ecr/build-and-push-image:
-          context: aws-dev
-          create-repo: true
-          dockerfile: Dockerfile
-          path: .
-          repo: circleci-ecr-demo
-          tag: "$CIRCLE_SHA1"
-
+      - run:
+          command:
+            docker build -t public.ecr.aws/g5u9i3i2/circleci:latest .
+      - run:
+          command:
+            aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/g5u9i3i2
+            docker push public.ecr.aws/g5u9i3i2/circleci:latest
