@@ -6,12 +6,17 @@ orbs:
 workflows:
   build_and_push_image:
     jobs:
-      - aws-ecr/build-and-push-image:
-          aws_access_key_id: AKIARWGRW3GYXPUTJJMG
-          aws_secret_access_key: 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
+      - aws-ecr/build-and-push-image:          
           context: aws-dev
           create-repo: true
           dockerfile: Dockerfile
           path: .
-          repo: circleci-ecr-demo
-          tag: latest
+          aws_access_key_id: AKIARWGRW3GYXPUTJJMG
+          aws_secret_access_key: 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
+        steps:
+          - run:
+              command:
+                aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/g5u9i3i2
+                docker tag circleci:latest public.ecr.aws/g5u9i3i2/circleci:latest 
+                docker push public.ecr.aws/g5u9i3i2/circleci:latest
+         
