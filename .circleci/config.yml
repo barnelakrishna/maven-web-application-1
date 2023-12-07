@@ -3,7 +3,7 @@ orbs:
   aws-cli: circleci/aws-cli@4.0
   aws-ecr: circleci/aws-ecr@9.0
 workflows:
-  jobs:
+  job:
     build-test-then-push-with-buildx:
       machine:
         image: ubuntu-2204:2022.07.1
