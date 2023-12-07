@@ -1,24 +1,17 @@
 version: 2.1
+
 orbs:
   aws-ecr: circleci/aws-ecr@8.1.3
-jobs: 
-  aws-cli-cred-setup:
-    executor: aws-cli/default
-    steps:
-      - aws-cli/setup:
-        aws-access-key-id: AKIARWGRW3GYXPUTJJMG
-        aws-secret-access-key: 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
 
 workflows:
   build_and_push_image:
     jobs:
-      - aws-cli-cred-setup:       
       - aws-ecr/build-and-push-image:
+          aws_access_key_id: AKIARWGRW3GYXPUTJJMG
+          aws_secret_access_key: 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
           context: aws-dev
           create-repo: true
           dockerfile: Dockerfile
           path: .
-          aws_access_key_id: AKIARWGRW3GYXPUTJJMG
-          aws_secret_access_key: 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
           repo: circleci-ecr-demo
           tag: latest
